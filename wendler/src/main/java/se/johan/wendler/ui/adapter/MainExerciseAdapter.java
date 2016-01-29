@@ -2,6 +2,7 @@ package se.johan.wendler.ui.adapter;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import se.johan.wendler.R;
@@ -18,6 +21,7 @@ import se.johan.wendler.model.MainExercise;
 import se.johan.wendler.model.SetType;
 import se.johan.wendler.ui.view.TextDrawable;
 import se.johan.wendler.util.ColorGenerator;
+import se.johan.wendler.util.PreferenceUtil;
 
 /**
  * Adapter used in the list for displaying the main exercise during a workout.
@@ -118,17 +122,20 @@ public class MainExerciseAdapter extends BaseAdapter {
         holder.setOne.setText(
                 String.format(mContext.getString(R.string.exercise_set_one),
                         String.valueOf(setOne.getWeight()),
-                        String.valueOf(setOne.getGoal())));
+                        String.valueOf(setOne.getGoal())) +
+                        getPlateRecommendations(setOne.getWeight()));
 
         holder.setTwo.setText(
                 String.format(mContext.getString(R.string.exercise_set_two),
                         String.valueOf(setTwo.getWeight()),
-                        String.valueOf(setTwo.getGoal())));
+                        String.valueOf(setTwo.getGoal())) +
+                        getPlateRecommendations(setTwo.getWeight()));
 
         holder.setThree.setText(
                 String.format(mContext.getString(R.string.exercise_set_three),
                         String.valueOf(setThree.getWeight()),
-                        String.valueOf(setThree.getGoal())) + plusSet);
+                        String.valueOf(setThree.getGoal())) + plusSet  +
+                        getPlateRecommendations(setThree.getWeight()));
 
         if (shouldShowRepsToBeat) {
             holder.repsToBeat.setText(
@@ -257,6 +264,26 @@ public class MainExerciseAdapter extends BaseAdapter {
                         ? mContext.getString(R.string.set_type_main_short)
                         : mContext.getString(R.string.set_type_main);
         }
+    }
+
+    /**
+     * Returns the plate break down.
+     */
+    private String getPlateRecommendations(double weight) {
+        if (!PreferenceUtil.getBoolean(mContext, PreferenceUtil.KEY_SHOW_PLATE_RECOMMENDATIONS, true)) {
+            return "";
+        }
+        DecimalFormat plateFormat = new DecimalFormat("0.#");
+        double[] plates = {45, 25, 10, 5, 2.5};
+        double side = (weight-45)/2;
+        List<String> recommendation = new ArrayList<>();
+        for (double p : plates){
+            while (side > p) {
+                recommendation.add(plateFormat.format(p));
+                side -= p;
+            }
+        }
+        return "  [" + TextUtils.join(",", recommendation) + "]";
     }
 
     /**

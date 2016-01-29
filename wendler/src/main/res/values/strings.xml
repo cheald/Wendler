@@ -161,6 +161,9 @@
     <string name="pref_vb_summary">Use volume buttons to control the stopwatch</string>
     <string name="pref_screen_on_title">Keep screen on</string>
     <string name="pref_screen_on_summary">Keep the screen on when the stopwatch is running</string>
+    <string name="pref_plate_recommendations_title">Plate recommendations</string>
+    <string name="pref_plate_recommendations_summary">Show plate recommendations
+	plate sizes 45, 25, 10, 5, 2.5</string>
     <string name="pref_round_title">Round to value</string>
     <string name="pref_round_summary">Round to the closest value when calculating weights</string>
 

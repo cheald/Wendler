@@ -50,6 +50,11 @@
             android:summary="@string/pref_screen_on_summary"
             android:title="@string/pref_screen_on_title"
             android:defaultValue="true"/>
+        <CheckBoxPreference
+            android:key="key_show_plate_recommendations"
+            android:summary="@string/pref_plate_recommendations_summary"
+            android:title="@string/pref_plate_recommendations_title"
+            android:defaultValue="true"/>
         <ListPreference
             android:key="key_round"
             android:title="@string/pref_round_title"

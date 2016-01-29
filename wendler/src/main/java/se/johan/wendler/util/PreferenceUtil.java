@@ -18,6 +18,7 @@ public class PreferenceUtil {
     public static final String KEY_DELOAD_REPS = "key_deload_reps";
     public static final String KEY_USE_VOLUME_BUTTONS = "key_use_volume_button";
     public static final String KEY_KEEP_SCREEN_ON_STOPWATCH = "key_keep_screen_on_stopwatch";
+    public static final String KEY_SHOW_PLATE_RECOMMENDATIONS = "key_show_plate_recommendations";
     public static final String KEY_HAS_SEEN_SHOWCASE_WORKOUTS = "key_has_seen_showcase_workouts";
     public static final String KEY_HAS_SEEN_SHOWCASE_FINISH_WORKOUTS =
             "key_has_seen_showcase_workout";
