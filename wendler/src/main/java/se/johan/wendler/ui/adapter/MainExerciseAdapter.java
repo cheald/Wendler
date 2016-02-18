@@ -278,7 +278,7 @@ public class MainExerciseAdapter extends BaseAdapter {
         double side = (weight-45)/2;
         List<String> recommendation = new ArrayList<>();
         for (double p : plates){
-            while (side > p) {
+            while (side >= p) {
                 recommendation.add(plateFormat.format(p));
                 side -= p;
             }
