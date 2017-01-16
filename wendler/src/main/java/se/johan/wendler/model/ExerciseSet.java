@@ -96,7 +96,7 @@ public class ExerciseSet implements Parcelable {
     }
 
     public boolean isWon() {
-        return mProgress >= mSetGoal;
+        return mProgress >= mRepGoal;
     }
 
     /**
