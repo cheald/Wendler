@@ -285,7 +285,7 @@ public class MainExerciseAdapter extends BaseAdapter {
      */
     private String getPlateRecommendations(double weight) {
         DecimalFormat plateFormat = new DecimalFormat("0.#");
-        double[] plates = {45, 25, 10, 5, 2.5};
+        double[] plates = {45, 25, 10, 5, 2.5, 1.25};
         double side = (weight-45)/2;
         List<List<Double>> recommendation = new ArrayList<>();
         List<Double> lastList = null;
