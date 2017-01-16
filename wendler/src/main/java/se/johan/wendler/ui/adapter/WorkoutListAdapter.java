@@ -109,12 +109,6 @@ public class WorkoutListAdapter extends BaseAdapter {
             holder.date = (TextView) convertView.findViewById(R.id.textDate);
             holder.overflow = (ImageButton) convertView.findViewById(R.id.overflow_button);
             holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
-            if (holder.imageView != null) {
-                String text = workout.getDisplayName().substring(0, 1);
-                int color = ColorGenerator.DEFAULT.getColor(text);
-                holder.textDrawable = TextDrawable.builder().buildRound(text, color);
-            }
-
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -127,9 +121,6 @@ public class WorkoutListAdapter extends BaseAdapter {
         }
 
         holder.exercise.setText(workout.getDisplayName());
-        if (holder.imageView != null) {
-            holder.imageView.setImageDrawable(holder.textDrawable);
-        }
 
         setWeekCycleText(holder, workout);
         setGoalText(holder, workout);
@@ -211,8 +202,18 @@ public class WorkoutListAdapter extends BaseAdapter {
      * Sets the completion status of the view.
      */
     private void setCompletionStatus(ViewHolder holder, Workout workout) {
-
         if (workout.isComplete()) {
+            if (holder.imageView != null) {
+                int imageResource = workout.isWon()
+                        ? R.drawable.ic_emoticon_white_36dp
+                        : R.drawable.ic_emoticon_sad_white_36dp;
+                int color = workout.isWon()
+                        ? mContext.getResources().getColor(android.R.color.holo_green_light)
+                        : mContext.getResources().getColor(android.R.color.holo_red_light);
+                holder.imageView.setImageResource(imageResource);
+                holder.imageView.setBackgroundDrawable(TextDrawable.builder().buildRound("", color));
+            }
+
             Drawable drawable = workout.isWon()
                     ? mContext.getResources().getDrawable(R.drawable.ic_check_black_24dp)
                     : mContext.getResources().getDrawable(R.drawable.ic_close_black_24dp);
@@ -222,6 +223,14 @@ public class WorkoutListAdapter extends BaseAdapter {
             }
             holder.exercise.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
         } else {
+
+            if (holder.imageView != null) {
+                String text = workout.getDisplayName().substring(0, 1);
+                int color = ColorGenerator.DEFAULT.getColor(text);
+                holder.textDrawable = TextDrawable.builder().buildRound(text, color);
+                holder.imageView.setImageDrawable(holder.textDrawable);
+            }
+
             holder.exercise.setCompoundDrawables(null, null, null, null);
             if (mType != TYPE_OLD_WORKOUTS) {
                 holder.exercise.setPaintFlags(
