@@ -12,16 +12,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_margin="@dimen/spacing_small"
+        android:clickable="false"
         android:gravity="center"
-        android:clickable="false">
+        android:orientation="horizontal">
 
         <ImageView
+            android:id="@+id/image_view"
             android:layout_width="@dimen/list_single_line_height_with_image"
             android:layout_height="@dimen/list_single_line_height_with_image"
-            android:id="@+id/image_view"
-            android:layout_margin="16dp"/>
+            android:layout_gravity="top"
+            android:layout_margin="8dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -33,48 +34,86 @@
                 style="@style/CardView.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="Warmup"
+                android:drawablePadding="@dimen/spacing_small"
                 tools:drawableRight="@drawable/ic_check_black_24dp"
-                android:drawablePadding="@dimen/spacing_small"/>
+                tools:text="Warmup" />
 
             <TextView
                 android:id="@+id/set_one"
                 style="@style/CardView.Subtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/spacing_small"
-                android:paddingBottom="@dimen/spacing_small"
-                tools:text="22.5 x 5"
-                android:background="?attr/selectableItemBackground"/>
+                android:background="?attr/selectableItemBackground"
+                android:padding="@dimen/spacing_small"
+                tools:text="22.5 x 5" />
+
+            <TextView
+                android:id="@+id/set_one_plates"
+                style="@style/CardView.Subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-8dp"
+                android:background="?attr/selectableItemBackground"
+                android:paddingBottom="4dp"
+                android:paddingLeft="@dimen/spacing_small"
+                android:paddingTop="4dp"
+                android:textSize="11sp"
+                tools:text="2x45, 1x25" />
 
             <TextView
                 android:id="@+id/set_two"
                 style="@style/CardView.Subtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/spacing_small"
-                android:paddingBottom="@dimen/spacing_small"
-                tools:text="22.5 x 5"
-                android:background="?attr/selectableItemBackground"/>
+                android:background="?attr/selectableItemBackground"
+                android:padding="@dimen/spacing_small"
+                android:paddingTop="@dimen/spacing_medium"
+                tools:text="22.5 x 5" />
+
+            <TextView
+                android:id="@+id/set_two_plates"
+                style="@style/CardView.Subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-8dp"
+                android:background="?attr/selectableItemBackground"
+                android:paddingBottom="4dp"
+                android:paddingLeft="@dimen/spacing_small"
+                android:paddingTop="4dp"
+                android:textSize="11sp"
+                tools:text="2x45, 1x25" />
 
             <TextView
                 android:id="@+id/set_three"
                 style="@style/CardView.Subtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/spacing_small"
-                android:paddingBottom="@dimen/spacing_small"
-                tools:text="22.5 x 5"
-                android:background="?attr/selectableItemBackground"/>
+                android:background="?attr/selectableItemBackground"
+                android:padding="@dimen/spacing_small"
+                android:paddingTop="@dimen/spacing_medium"
+                tools:text="22.5 x 5" />
+
+            <TextView
+                android:id="@+id/set_three_plates"
+                style="@style/CardView.Subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-8dp"
+                android:background="?attr/selectableItemBackground"
+                android:paddingBottom="4dp"
+                android:paddingLeft="@dimen/spacing_small"
+                android:paddingTop="4dp"
+                android:textSize="11sp"
+                tools:text="2x45, 1x25" />
 
             <TextView
                 android:id="@+id/reps_to_beat"
                 style="@style/CardView.Subtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/spacing_small"
                 android:paddingBottom="@dimen/spacing_small"
-                tools:text="Reps for PR: 10"/>
+                android:paddingTop="@dimen/spacing_small"
+                tools:text="Reps for PR: 10" />
         </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

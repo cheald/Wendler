@@ -99,6 +99,9 @@ public class MainExerciseAdapter extends BaseAdapter {
             holder.setOne = (TextView) convertView.findViewById(R.id.set_one);
             holder.setTwo = (TextView) convertView.findViewById(R.id.set_two);
             holder.setThree = (TextView) convertView.findViewById(R.id.set_three);
+            holder.setOnePlates = (TextView) convertView.findViewById(R.id.set_one_plates);
+            holder.setTwoPlates = (TextView) convertView.findViewById(R.id.set_two_plates);
+            holder.setThreePlates = (TextView) convertView.findViewById(R.id.set_three_plates);
             holder.repsToBeat = (TextView) convertView.findViewById(R.id.reps_to_beat);
             holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
             String text = getSetTypeString(setType, true);
@@ -134,6 +137,19 @@ public class MainExerciseAdapter extends BaseAdapter {
                 String.format(mContext.getString(R.string.exercise_set_three),
                         String.valueOf(setThree.getWeight()),
                         String.valueOf(setThree.getRepGoal()) + plusSet));
+
+        if (PreferenceUtil.getBoolean(mContext, PreferenceUtil.KEY_SHOW_PLATE_RECOMMENDATIONS, true)) {
+            holder.setOnePlates.setVisibility(View.VISIBLE);
+            holder.setTwoPlates.setVisibility(View.VISIBLE);
+            holder.setThreePlates.setVisibility(View.VISIBLE);
+            holder.setOnePlates.setText(getPlateRecommendations(setOne.getWeight()));
+            holder.setTwoPlates.setText(getPlateRecommendations(setTwo.getWeight()));
+            holder.setThreePlates.setText(getPlateRecommendations(setThree.getWeight()));
+        } else {
+            holder.setOnePlates.setVisibility(View.GONE);
+            holder.setTwoPlates.setVisibility(View.GONE);
+            holder.setThreePlates.setVisibility(View.GONE);
+        }
 
         if (shouldShowRepsToBeat) {
             holder.repsToBeat.setText(
@@ -268,20 +284,31 @@ public class MainExerciseAdapter extends BaseAdapter {
      * Returns the plate break down.
      */
     private String getPlateRecommendations(double weight) {
-        if (!PreferenceUtil.getBoolean(mContext, PreferenceUtil.KEY_SHOW_PLATE_RECOMMENDATIONS, true)) {
-            return "";
-        }
         DecimalFormat plateFormat = new DecimalFormat("0.#");
         double[] plates = {45, 25, 10, 5, 2.5};
         double side = (weight-45)/2;
-        List<String> recommendation = new ArrayList<>();
+        List<List<Double>> recommendation = new ArrayList<>();
+        List<Double> lastList = null;
         for (double p : plates){
             while (side >= p) {
-                recommendation.add(plateFormat.format(p));
+                if (lastList == null || lastList.get(0) != p) {
+                    lastList = new ArrayList<>();
+                    recommendation.add(lastList);
+                }
+                lastList.add(p);
                 side -= p;
             }
         }
-        return "  [" + TextUtils.join(",", recommendation) + "]";
+
+        List<String> plateStrings = new ArrayList<>();
+        for(List<Double> list : recommendation) {
+            plateStrings.add(String.format(Locale.US, "%1$dx%2$s", list.size(), plateFormat.format(list.get(0))));
+        }
+        if (plateStrings.size() == 0) {
+            plateStrings.add(mContext.getString(R.string.empty_bar));
+        }
+
+        return mContext.getResources().getString(R.string.plates_label) + ": " + TextUtils.join(", ", plateStrings) + "";
     }
 
     /**
@@ -292,6 +319,9 @@ public class MainExerciseAdapter extends BaseAdapter {
         public TextView setOne;
         public TextView setTwo;
         public TextView setThree;
+        public TextView setOnePlates;
+        public TextView setTwoPlates;
+        public TextView setThreePlates;
         public ImageView imageView;
         public TextDrawable textDrawable;
         public TextView repsToBeat;
