@@ -31,7 +31,8 @@
     <!-- EditText hints -->
     <string name="hint_weight">Weight</string>
     <string name="hint_reps">Reps</string>
-    <string name="hint_reps_or_sets">Set or rep goal</string>
+    <string name="hint_set_goal">Set goal</string>
+    <string name="hint_rep_goal">Rep goal</string>
     <string name="hint_one_rm">1RM</string>
     <string name="hint_one_tm">Training Max</string>
     <string name="hint_percentage">Percentage</string>
@@ -96,7 +97,7 @@
     <string name="reps_to_beat">Reps to beat PR: %1$s</string>
     <string name="one_rm_with_number">Estimated 1RM: %1$s</string>
     <string name="performed_reps_with_number">Reps: %1$s</string>
-    <string name="extra_exercise_weight">Weight: %1$s</string>
+    <string name="extra_exercise_weight">Goal: %1$s&#x00d7;%2$s @ %3$s</string>
     <string name="extra_exercise_percentage">%1$s%% of %2$s</string>
     <string name="extra_exercise_progress">Progress: %1$s/%2$s</string>
     <string name="exercise_goal">Goal: %1$s</string>
@@ -227,4 +228,6 @@
     <string name="help_workouts">Awesomesauce</string>
     <string name="no_additional_exercises_hint">No additional exercises, you should add some!</string>
     <string name="no_workouts_hint">No workouts performed yet</string>
+    <string name="empty_bar">Just the bar</string>
+    <string name="plates_label">"Plates"</string>
 </resources>

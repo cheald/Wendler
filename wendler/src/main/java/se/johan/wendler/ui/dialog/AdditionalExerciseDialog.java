@@ -19,6 +19,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -54,10 +55,11 @@ public class AdditionalExerciseDialog extends AnimationDialog implements
     private static final String EXTRA_TITLE = "title";
 
     private AutoCompleteTextView mAutoCompleteNameTextView;
-    private EditText mGoalEditText, mWeightEditText, mPercentageEditText;
+    private EditText mSetGoalEditText, mRepGoalEditText, mWeightEditText, mPercentageEditText;
     private SwitchCompat mMainExerciseSwitch;
     private Spinner mMainExerciseSpinner;
-    private FloatLabelLayout mPercentageLabelLayout;
+    private FloatLabelLayout mPercentageLabelLayout, mWeightLayout;
+    private LinearLayout mMainExerciseLayout;
     private boolean mForced = false;
 
     public AdditionalExerciseDialog() {
@@ -155,13 +157,16 @@ public class AdditionalExerciseDialog extends AnimationDialog implements
         mMainExerciseSpinner = (Spinner) view.findViewById(R.id.spinner);
         mMainExerciseSpinner.setOnItemSelectedListener(this);
 
+        mMainExerciseLayout = (LinearLayout) view.findViewById(R.id.mainExerciseLayout);
+        mWeightLayout = (FloatLabelLayout) view.findViewById(R.id.weight_layout);
+
         mMainExerciseSwitch = (SwitchCompat) view.findViewById(R.id.switch1);
         mMainExerciseSwitch.setOnCheckedChangeListener(this);
 
         mAutoCompleteNameTextView =
                 (AutoCompleteTextView) view.findViewById(R.id.tv_name_auto_complete);
         mAutoCompleteNameTextView.setAdapter(
-                new ArrayAdapter<String>(getActivity(),
+                new ArrayAdapter<>(getActivity(),
                         android.R.layout.simple_dropdown_item_1line,
                         getStoredAdditionalExerciseNames())
         );
@@ -169,7 +174,8 @@ public class AdditionalExerciseDialog extends AnimationDialog implements
         mWeightEditText = (FilterEditText) view.findViewById(R.id.et_weight_amount);
         mWeightEditText.addTextChangedListener(weightWatcher);
 
-        mGoalEditText = (FilterEditText) view.findViewById(R.id.et_set_rep_amount);
+        mSetGoalEditText = (FilterEditText) view.findViewById(R.id.et_set_amount);
+        mRepGoalEditText = (FilterEditText) view.findViewById(R.id.et_rep_amount);
         mMainExerciseSpinner.setEnabled(false);
         mPercentageEditText.setEnabled(false);
         if (exercise != null) {
@@ -194,6 +200,8 @@ public class AdditionalExerciseDialog extends AnimationDialog implements
         mMainExerciseSpinner.setEnabled(isChecked);
         mPercentageEditText.setEnabled(isChecked);
         if (!isChecked) {
+            mMainExerciseLayout.setVisibility(View.GONE);
+            mWeightLayout.setVisibility(View.VISIBLE);
             mPercentageEditText.setText("");
             mMainExerciseSpinner.setSelection(0);
             mWeightEditText.setSelection(mWeightEditText.getText().length());
@@ -204,6 +212,9 @@ public class AdditionalExerciseDialog extends AnimationDialog implements
             if (mPercentageLabelLayout != null) {
                 mPercentageLabelLayout.hideLabel(true);
             }
+        } else {
+            mMainExerciseLayout.setVisibility(View.VISIBLE);
+            mWeightLayout.setVisibility(View.GONE);
         }
     }
 
@@ -232,7 +243,7 @@ public class AdditionalExerciseDialog extends AnimationDialog implements
      * Get an ArrayList with names of all stored additional exercises.
      */
     private ArrayList<String> getStoredAdditionalExerciseNames() {
-        ArrayList<String> items = new ArrayList<String>();
+        ArrayList<String> items = new ArrayList<>();
 
         String[] staticList = getResources().getStringArray(R.array.additional_exercises);
         items.addAll(Arrays.asList(staticList));
@@ -271,7 +282,8 @@ public class AdditionalExerciseDialog extends AnimationDialog implements
         });
 
         mWeightEditText.setText(String.valueOf(exercise.getExerciseSet(0).getWeight()));
-        mGoalEditText.setText(String.valueOf(exercise.getExerciseSet(0).getGoal()));
+        mSetGoalEditText.setText(String.valueOf(exercise.getExerciseSet(0).getSetGoal()));
+        mRepGoalEditText.setText(String.valueOf(exercise.getExerciseSet(0).getRepGoal()));
 
         boolean checked = !TextUtils.isEmpty(exercise.getMainExerciseName());
 
@@ -279,8 +291,7 @@ public class AdditionalExerciseDialog extends AnimationDialog implements
             mMainExerciseSpinner.setSelection(getPositionOfName(exercise.getMainExerciseName()));
             mPercentageEditText.setText(String.valueOf(exercise.getMainExercisePercentage()));
         }
-
-        mMainExerciseSwitch.setChecked(checked);
+        onCheckedChanged(mMainExerciseSwitch, checked);
     }
 
     /**
@@ -291,9 +302,9 @@ public class AdditionalExerciseDialog extends AnimationDialog implements
                 && mAutoCompleteNameTextView.getText().toString().trim().isEmpty()) {
             CustomObjectAnimator.nope(mAutoCompleteNameTextView).start();
             return false;
-        } else if (mGoalEditText.getText() != null
-                && mGoalEditText.getText().toString().trim().isEmpty()) {
-            CustomObjectAnimator.nope(mGoalEditText).start();
+        } else if (mSetGoalEditText.getText() != null
+                && mSetGoalEditText.getText().toString().trim().isEmpty()) {
+            CustomObjectAnimator.nope(mSetGoalEditText).start();
             return false;
         }
         return true;
@@ -361,7 +372,8 @@ public class AdditionalExerciseDialog extends AnimationDialog implements
         String name = mAutoCompleteNameTextView.getText().toString();
         double weight = mWeightEditText.getText().length() < 1 ?
                 0 : Utils.getDoubleFromEditText(mWeightEditText);
-        int goal = Utils.getIntFromEditText(mGoalEditText);
+        int setGoal = Utils.getIntFromEditText(mSetGoalEditText);
+        int repGoal = Utils.getIntFromEditText(mRepGoalEditText);
 
         String mainName = "";
         int mainPercentage = 0;
@@ -383,7 +395,7 @@ public class AdditionalExerciseDialog extends AnimationDialog implements
 
         progress = progress < 0 ? 0 : progress;
 
-        ExerciseSet set = new ExerciseSet(SetType.REGULAR, weight, goal, progress);
+        ExerciseSet set = new ExerciseSet(SetType.REGULAR, weight, setGoal, repGoal, progress);
         ArrayList<ExerciseSet> sets = new ArrayList<ExerciseSet>();
         sets.add(set);
 

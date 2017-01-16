@@ -87,7 +87,7 @@ public class MainExercise extends Exercise implements Parcelable {
      */
     public int getGoal() {
         int size = mExerciseSets.size();
-        return mExerciseSets.get(size - 1).getGoal();
+        return mExerciseSets.get(size - 1).getRepGoal();
     }
 
     /**
@@ -175,7 +175,7 @@ public class MainExercise extends Exercise implements Parcelable {
         mIncrement = in.readDouble();
         mWorkoutPercentage = in.readInt();
         if (in.readByte() == 0x01) {
-            mExerciseSets = new ArrayList<ExerciseSet>();
+            mExerciseSets = new ArrayList<>();
             in.readList(mExerciseSets, ExerciseSet.class.getClassLoader());
         } else {
             mExerciseSets = null;

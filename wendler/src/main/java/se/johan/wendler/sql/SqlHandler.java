@@ -39,7 +39,7 @@ import se.johan.wendler.util.WendlerizedLog;
 public class SqlHandler {
 
     public static final String DATABASE_NAME = "WendlerizedDb";
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 13;
 
     /**
      * Stats table *
@@ -90,7 +90,8 @@ public class SqlHandler {
      */
     private static final String DATABASE_TABLE_WENDLER_EXTRA = "workout_extra";
     private static final String KEY_EXERCISE_NAME = "exercise_name";
-    private static final String KEY_NUMBER_OF_SETS_OR_REPS_TO_BE_DONE = "nbr_of_sets";
+    private static final String KEY_NUMBER_OF_SETS_TO_BE_DONE = "nbr_of_sets";
+    private static final String KEY_NUMBER_OF_REPS_TO_BE_DONE = "nbr_of_reps";
     private static final String KEY_EXTRA_WEIGHT = "extra_weight";
     private static final String KEY_EXTRA_REPS_OR_SETS_COMPLETED = "extra_reps";
     private static final String KEY_EXTRA_EXERCISE_ID = "extra_exercise_id";
@@ -485,7 +486,11 @@ public class SqlHandler {
                     String name = cursor.getString(cursor.getColumnIndex(KEY_EXERCISE_NAME));
 
                     int sets = cursor.getInt(cursor.getColumnIndex
-                            (KEY_NUMBER_OF_SETS_OR_REPS_TO_BE_DONE));
+                            (KEY_NUMBER_OF_SETS_TO_BE_DONE));
+                    int reps = cursor.getInt(cursor.getColumnIndex
+                            (KEY_NUMBER_OF_REPS_TO_BE_DONE));
+
+
                     double weight = cursor.getDouble(cursor.getColumnIndex(KEY_EXTRA_WEIGHT));
                     int percentage = cursor.getInt(cursor.getColumnIndex
                             (KEY_EXTRA_PERCENTAGE_OF_MAIN_EXERCISE));
@@ -503,7 +508,7 @@ public class SqlHandler {
                                 percentage);
                     }
 
-                    ExerciseSet set = new ExerciseSet(SetType.REGULAR, weight, sets, 0, false);
+                    ExerciseSet set = new ExerciseSet(SetType.REGULAR, weight, sets, reps, 0, false);
                     exerciseSets.add(set);
 
                     AdditionalExercise exercise = new AdditionalExercise(
@@ -701,7 +706,8 @@ public class SqlHandler {
             ContentValues cv = new ContentValues();
             cv.put(KEY_WORKOUT_ID, workoutId);
             cv.put(KEY_EXERCISE_NAME, exercise.getName());
-            cv.put(KEY_NUMBER_OF_SETS_OR_REPS_TO_BE_DONE, exercise.getExerciseSet(0).getGoal());
+            cv.put(KEY_NUMBER_OF_SETS_TO_BE_DONE, exercise.getExerciseSet(0).getSetGoal());
+            cv.put(KEY_NUMBER_OF_REPS_TO_BE_DONE, exercise.getExerciseSet(0).getRepGoal());
             cv.put(KEY_EXTRA_REPS_OR_SETS_COMPLETED, exercise.getExerciseSet(0).getProgress());
             cv.put(KEY_EXTRA_WEIGHT, exercise.getExerciseSet(0).getWeight());
             cv.put(KEY_EXTRA_MAIN_EXERCISE_NAME, exercise.getMainExerciseName());
@@ -788,7 +794,8 @@ public class SqlHandler {
         ContentValues cv = new ContentValues();
         cv.put(KEY_EXERCISE_NAME, exercise.getName());
         cv.put(KEY_WORKOUT_EXERCISE, workoutExercise);
-        cv.put(KEY_NUMBER_OF_SETS_OR_REPS_TO_BE_DONE, exercise.getExerciseSet(0).getGoal());
+        cv.put(KEY_NUMBER_OF_SETS_TO_BE_DONE, exercise.getExerciseSet(0).getSetGoal());
+        cv.put(KEY_NUMBER_OF_REPS_TO_BE_DONE, exercise.getExerciseSet(0).getRepGoal());
         cv.put(KEY_EXTRA_WEIGHT, exercise.getExerciseSet(0).getWeight());
         cv.put(KEY_EXTRA_MAIN_EXERCISE_NAME, exercise.getMainExerciseName());
         cv.put(KEY_EXTRA_PERCENTAGE_OF_MAIN_EXERCISE, exercise.getMainExercisePercentage());
@@ -1389,7 +1396,9 @@ public class SqlHandler {
                     String name = cursor.getString(cursor.getColumnIndex(KEY_EXERCISE_NAME));
 
                     int sets = cursor.getInt(cursor.getColumnIndex
-                            (KEY_NUMBER_OF_SETS_OR_REPS_TO_BE_DONE));
+                            (KEY_NUMBER_OF_SETS_TO_BE_DONE));
+                    int reps = cursor.getInt(cursor.getColumnIndex
+                            (KEY_NUMBER_OF_REPS_TO_BE_DONE));
                     double weight = cursor.getDouble(cursor.getColumnIndex(KEY_EXTRA_WEIGHT));
                     int repsPerformed = cursor.getInt(cursor.getColumnIndex
                             (KEY_EXTRA_REPS_OR_SETS_COMPLETED));
@@ -1413,7 +1422,7 @@ public class SqlHandler {
                                 percentage);
                     }
 
-                    ExerciseSet set = new ExerciseSet(SetType.REGULAR, weight, sets, repsPerformed);
+                    ExerciseSet set = new ExerciseSet(SetType.REGULAR, weight, sets, reps, repsPerformed);
                     exerciseSets.add(set);
 
                     AdditionalExercise exercise = new AdditionalExercise(
@@ -1660,7 +1669,8 @@ public class SqlHandler {
                     KEY_WORKOUT_ID + " INTEGER NOT NULL, " +
                     KEY_EXERCISE_NAME + " TEXT NOT NULL, " +
                     KEY_EXTRA_EXERCISE_ID + " INTEGER NOT NULL, " +
-                    KEY_NUMBER_OF_SETS_OR_REPS_TO_BE_DONE + " TEXT NOT NULL, " +
+                    KEY_NUMBER_OF_SETS_TO_BE_DONE + " INTEGER NOT NULL, " +
+                    KEY_NUMBER_OF_REPS_TO_BE_DONE + " INTEGER NOT NULL, " +
                     KEY_EXTRA_WEIGHT + " TEXT NOT NULL, " +
                     KEY_EXTRA_PERCENTAGE_OF_MAIN_EXERCISE + " TEXT, " +
                     KEY_EXTRA_MAIN_EXERCISE_NAME + " TEXT, " +
@@ -1676,7 +1686,8 @@ public class SqlHandler {
                     KEY_EXERCISE_NAME + " TEXT NOT NULL, " +
                     KEY_EXTRA_EXERCISE_ID + " TEXT NOT NULL, " +
                     KEY_WORKOUT_EXERCISE + " TEXT NOT NULL, " +
-                    KEY_NUMBER_OF_SETS_OR_REPS_TO_BE_DONE + " TEXT NOT NULL, " +
+                    KEY_NUMBER_OF_SETS_TO_BE_DONE + " INTEGER NOT NULL, " +
+                    KEY_NUMBER_OF_REPS_TO_BE_DONE + " INTEGER NOT NULL, " +
                     KEY_EXTRA_WEIGHT + " TEXT, " +
                     KEY_EXTRA_PERCENTAGE_OF_MAIN_EXERCISE + " TEXT, " +
                     KEY_EXTRA_MAIN_EXERCISE_NAME + " TEXT, " +
@@ -1686,100 +1697,37 @@ public class SqlHandler {
                     KEY_EXTRA_ORDER_IN_LIST + " TEXT NOT NULL);");
         }
 
+        private void addColumn(SQLiteDatabase db, String table, String column, String statement) {
+            try {
+                db.execSQL("ALTER TABLE " + table + " ADD COLUMN " +  column + " " + statement);
+            } catch (Exception e) {
+                WendlerizedLog.v("Failed to add column " + column + " in " +  table);
+            }
+        }
+
         /**
          * Called when the database is upgraded.
          */
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            try {
-                db.execSQL("ALTER TABLE " + DATABASE_TABLE_WENDLER_EXTRA_LIST + " ADD COLUMN " +
-                        KEY_IS_BBB + " INTEGER DEFAULT 0");
-            } catch (Exception e) {
-                WendlerizedLog.v("Failed to add column " + KEY_IS_BBB + " in " +
-                        DATABASE_TABLE_WENDLER_EXTRA_LIST);
-            }
-
-            try {
-                db.execSQL("ALTER TABLE " + DATABASE_TABLE_WENDLER_STATS + " ADD COLUMN "
-                        + KEY_SHOULD_DELOAD + " INTEGER DEFAULT 0");
-            } catch (Exception e) {
-                WendlerizedLog.v("Failed to add column " + KEY_SHOULD_DELOAD + " in " +
-                        DATABASE_TABLE_WENDLER_STATS);
-            }
-
-            try {
-                db.execSQL("ALTER TABLE " + DATABASE_TABLE_WENDLER_STATS + " ADD COLUMN "
-                        + KEY_CYCLE_NAME + " INTEGER DEFAULT 0");
-            } catch (Exception e) {
-                WendlerizedLog.v("Failed to add column " + KEY_CYCLE_NAME + " in " +
-                        DATABASE_TABLE_WENDLER_STATS);
-            }
-
-            try {
-                db.execSQL("ALTER TABLE " + DATABASE_TABLE_WENDLER_WORKOUT + " ADD COLUMN "
-                        + KEY_CYCLE_NAME + " INTEGER DEFAULT 0");
-            } catch (Exception e) {
-                WendlerizedLog.v("Failed to add column " + KEY_CYCLE_NAME + " in " +
-                        DATABASE_TABLE_WENDLER_WORKOUT);
-            }
-
-            try {
-                db.execSQL("ALTER TABLE " + DATABASE_TABLE_WENDLER_EXTRA + " ADD COLUMN " +
-                        KEY_MAIN_EXERCISE_WEIGHT + " TEXT DEFAULT 0");
-            } catch (Exception e) {
-                WendlerizedLog.v("Failed to add column " + KEY_MAIN_EXERCISE_WEIGHT + " in " +
-                        DATABASE_TABLE_WENDLER_EXTRA);
-            }
-            try {
-                db.execSQL("ALTER TABLE " + DATABASE_TABLE_WENDLER_EXTRA_LIST + " ADD COLUMN " +
-                        KEY_MAIN_EXERCISE_WEIGHT + " TEXT DEFAULT 0");
-            } catch (Exception e) {
-                WendlerizedLog.v("Failed to add column " + KEY_MAIN_EXERCISE_WEIGHT + " in " +
-                        DATABASE_TABLE_WENDLER_EXTRA_LIST);
-            }
-
-            try {
-                db.execSQL("ALTER TABLE " + DATABASE_TABLE_WENDLER_EXTRA + " ADD COLUMN " +
-                        KEY_IS_STARTED + " TEXT DEFAULT 0");
-            } catch (Exception e) {
-                WendlerizedLog.v("Failed to add column " + DATABASE_TABLE_WENDLER_EXTRA + " in " +
-                        KEY_IS_STARTED);
-            }
-
-            try {
-                db.execSQL("ALTER TABLE " + DATABASE_TABLE_WENDLER_EXTRA_LIST + " ADD COLUMN " +
-                        KEY_INCREMENT + " TEXT DEFAULT 0");
-            } catch (Exception e) {
-                WendlerizedLog.v("Failed to add column " + DATABASE_TABLE_WENDLER_EXTRA_LIST
-                        + " in " + KEY_INCREMENT);
-            }
-
-            try {
-                db.execSQL("ALTER TABLE " + DATABASE_TABLE_WENDLER_EXTRA_LIST + " ADD COLUMN " +
-                        KEY_IS_BBB + " INTEGER DEFAULT 0");
-            } catch (Exception e) {
-                WendlerizedLog.v("Failed to add column " + DATABASE_TABLE_WENDLER_EXTRA_LIST
-                        + " in " + KEY_IS_BBB);
-            }
-
-            try {
-                db.execSQL("ALTER TABLE " + DATABASE_TABLE_WENDLER_EXTRA + " ADD COLUMN " +
-                        KEY_IS_STARTED + " INTEGER DEFAULT 0");
-            } catch (Exception e) {
-                WendlerizedLog.v("Failed to add column " + DATABASE_TABLE_WENDLER_EXTRA
-                        + " in " + KEY_IS_STARTED);
-            }
+            addColumn(db, DATABASE_TABLE_WENDLER_EXTRA_LIST, KEY_IS_BBB, "INTEGER DEFAULT 0");
+            addColumn(db, DATABASE_TABLE_WENDLER_STATS, KEY_SHOULD_DELOAD, "INTEGER DEFAULT 0");
+            addColumn(db, DATABASE_TABLE_WENDLER_STATS, KEY_CYCLE_NAME, "INTEGER DEFAULT 0");
+            addColumn(db, DATABASE_TABLE_WENDLER_WORKOUT, KEY_CYCLE_NAME, "INTEGER DEFAULT 0");
+            addColumn(db, DATABASE_TABLE_WENDLER_EXTRA, KEY_MAIN_EXERCISE_WEIGHT, "TEXT DEFAULT 0");
+            addColumn(db, DATABASE_TABLE_WENDLER_EXTRA_LIST, KEY_MAIN_EXERCISE_WEIGHT, "TEXT DEFAULT 0");
+            addColumn(db, DATABASE_TABLE_WENDLER_EXTRA, KEY_IS_STARTED, "TEXT DEFAULT 0");
+            addColumn(db, DATABASE_TABLE_WENDLER_EXTRA_LIST, KEY_INCREMENT, "TEXT DEFAULT 0");
+            addColumn(db, DATABASE_TABLE_WENDLER_EXTRA, KEY_IS_STARTED, "INTEGER DEFAULT 0");
 
             if (oldVersion < 12 && newVersion >= 12) {
-                try {
-                    db.execSQL("ALTER TABLE " + DATABASE_TABLE_WENDLER_WORKOUT + " ADD COLUMN " +
-                    KEY_WORKOUT_EST_ONE_RM + " INTEGER DEFAULT 0");
+                addColumn(db, DATABASE_TABLE_WENDLER_WORKOUT, KEY_WORKOUT_EST_ONE_RM, "INTEGER DEFAULT 0");
+                setEst1rmForExistingWorkouts(db);
+            }
 
-                    setEst1rmForExistingWorkouts(db);
-                } catch(Exception e) {
-                    WendlerizedLog.v("Failed to add column " + DATABASE_TABLE_WENDLER_WORKOUT
-                    + " in " + KEY_WORKOUT_EST_ONE_RM);
-                }
+            if (oldVersion < 13 && newVersion >= 13) {
+                addColumn(db, DATABASE_TABLE_WENDLER_EXTRA, KEY_NUMBER_OF_REPS_TO_BE_DONE, "INTEGER DEFAULT 0");
+                addColumn(db, DATABASE_TABLE_WENDLER_EXTRA_LIST, KEY_NUMBER_OF_REPS_TO_BE_DONE, "INTEGER DEFAULT 0");
             }
         }
 

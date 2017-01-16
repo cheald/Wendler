@@ -208,6 +208,7 @@ public class WendlerMath {
             sets.add(new ExerciseSet(
                     type,
                     calculateWeight(context, oneRm, setPercentages[i]),
+                    1,
                     setReps[i],
                     progress,
                     progress > -1));
@@ -238,6 +239,7 @@ public class WendlerMath {
             sets.add(new ExerciseSet(
                     SetType.WARM_UP,
                     calculateWeight(context, oneRm, percentagesAsInt[i]),
+                    1,
                     warmupRepsAsInt[i],
                     progress,
                     progress != -1));

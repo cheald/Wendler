@@ -13,6 +13,7 @@ import android.widget.TextView;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import se.johan.wendler.R;
 import se.johan.wendler.model.Action;
@@ -122,20 +123,17 @@ public class MainExerciseAdapter extends BaseAdapter {
         holder.setOne.setText(
                 String.format(mContext.getString(R.string.exercise_set_one),
                         String.valueOf(setOne.getWeight()),
-                        String.valueOf(setOne.getGoal())) +
-                        getPlateRecommendations(setOne.getWeight()));
+                        String.valueOf(setOne.getRepGoal())));
 
         holder.setTwo.setText(
                 String.format(mContext.getString(R.string.exercise_set_two),
                         String.valueOf(setTwo.getWeight()),
-                        String.valueOf(setTwo.getGoal())) +
-                        getPlateRecommendations(setTwo.getWeight()));
+                        String.valueOf(setTwo.getRepGoal())));
 
         holder.setThree.setText(
                 String.format(mContext.getString(R.string.exercise_set_three),
                         String.valueOf(setThree.getWeight()),
-                        String.valueOf(setThree.getGoal())) + plusSet  +
-                        getPlateRecommendations(setThree.getWeight()));
+                        String.valueOf(setThree.getRepGoal()) + plusSet));
 
         if (shouldShowRepsToBeat) {
             holder.repsToBeat.setText(

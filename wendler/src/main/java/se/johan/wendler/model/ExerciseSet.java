@@ -10,17 +10,19 @@ public class ExerciseSet implements Parcelable {
 
     private final SetType mSetType;
     private double mWeight = 0.0;
-    private final int mGoal;
+    private final int mSetGoal;
+    private final int mRepGoal;
     private int mProgress;
     private boolean mIsComplete;
 
     /**
      * Constructor used for last sets on the main exercise.
      */
-    public ExerciseSet(SetType type, double weight, int goal, int progress, boolean isComplete) {
+    public ExerciseSet(SetType type, double weight, int setGoal, int repGoal, int progress, boolean isComplete) {
         mSetType = type;
         mWeight = weight;
-        mGoal = goal;
+        mSetGoal = setGoal;
+        mRepGoal = repGoal;
         mProgress = progress;
         mIsComplete = isComplete;
     }
@@ -28,12 +30,13 @@ public class ExerciseSet implements Parcelable {
     /**
      * Constructor used for last sets on the main exercise.
      */
-    public ExerciseSet(SetType type, double weight, int goal, int progress) {
+    public ExerciseSet(SetType type, double weight, int setGoal, int repGoal, int progress) {
         mSetType = type;
         mWeight = weight;
-        mGoal = goal;
+        mSetGoal = setGoal;
+        mRepGoal = repGoal;
         mProgress = progress;
-        mIsComplete = mProgress >= mGoal;
+        mIsComplete = mProgress >= mSetGoal;
     }
 
     /**
@@ -51,10 +54,17 @@ public class ExerciseSet implements Parcelable {
     }
 
     /**
-     * Return the goal.
+     * Return the set goal.
      */
-    public int getGoal() {
-        return mGoal;
+    public int getSetGoal() {
+        return mSetGoal;
+    }
+
+    /**
+     * Return the rep goal.
+     */
+    public int getRepGoal() {
+        return mRepGoal;
     }
 
     /**
@@ -86,7 +96,7 @@ public class ExerciseSet implements Parcelable {
     }
 
     public boolean isWon() {
-        return mProgress >= mGoal;
+        return mProgress >= mSetGoal;
     }
 
     /**
@@ -95,7 +105,8 @@ public class ExerciseSet implements Parcelable {
     protected ExerciseSet(Parcel in) {
         mSetType = (SetType) in.readValue(SetType.class.getClassLoader());
         mWeight = in.readDouble();
-        mGoal = in.readInt();
+        mSetGoal = in.readInt();
+        mRepGoal = in.readInt();
         mProgress = in.readInt();
         mIsComplete = in.readInt() == 1;
     }
@@ -115,7 +126,8 @@ public class ExerciseSet implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(mSetType);
         dest.writeDouble(mWeight);
-        dest.writeInt(mGoal);
+        dest.writeInt(mSetGoal);
+        dest.writeInt(mRepGoal);
         dest.writeInt(mProgress);
         dest.writeInt(mIsComplete ? 1 : 0);
     }
@@ -143,7 +155,8 @@ public class ExerciseSet implements Parcelable {
             ExerciseSet other = (ExerciseSet) o;
             return other.getType().equals(mSetType)
                     && other.getWeight() == mWeight
-                    && other.getGoal() == mGoal
+                    && other.getSetGoal() == mSetGoal
+                    && other.getRepGoal() == mRepGoal
                     && other.isComplete() == mIsComplete;
         }
         return false;

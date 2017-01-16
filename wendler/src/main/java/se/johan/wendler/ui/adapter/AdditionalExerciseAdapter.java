@@ -126,10 +126,10 @@ public class AdditionalExerciseAdapter extends BaseAdapter {
             double weight = exercise.getExerciseSet(position).getWeight();
             weightAsText = weight < 1 ?
                     res.getString(R.string.not_available) : String.valueOf(weight);
-
         }
-        String text =
-                String.format(res.getString(R.string.extra_exercise_weight), weightAsText);
+        int reps = exercise.getExerciseSet(position).getRepGoal();
+        int sets = exercise.getExerciseSet(position).getSetGoal();
+        String text = String.format(res.getString(R.string.extra_exercise_weight), sets, reps, weightAsText);
         holder.weight.setText(text);
     }
 
@@ -139,16 +139,15 @@ public class AdditionalExerciseAdapter extends BaseAdapter {
     private void setGoalText(
             ViewHolder holder, Resources res, AdditionalExercise exercise, int position) {
         String text;
-        int goal = exercise.getExerciseSet(position).getGoal();
+        int setGoal = exercise.getExerciseSet(position).getSetGoal();
         if (mType == TYPE_WORKOUT) {
-            text = String.format(res.getString(R.string.extra_exercise_progress),
-                    exercise.getProgress(0), goal);
+            text = String.format(res.getString(R.string.extra_exercise_progress), exercise.getProgress(0), setGoal);
         } else {
-            text = String.format(res.getString(R.string.exercise_goal), goal);
+            text = String.format(res.getString(R.string.exercise_goal), setGoal);
         }
         holder.goal.setText(text);
 
-        if (goal == exercise.getProgress(0)) {
+        if (setGoal == exercise.getProgress(0)) {
             holder.name.setCompoundDrawablesWithIntrinsicBounds(
                     null,
                     null,
@@ -177,7 +176,7 @@ public class AdditionalExerciseAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
-                if ((exercise.getProgress(0) + 1) > exercise.getExerciseSet(0).getGoal()) {
+                if ((exercise.getProgress(0) + 1) > exercise.getExerciseSet(0).getSetGoal()) {
                     return;
                 }
                 exercise.setProgress(0, exercise.getProgress(0) + 1);
@@ -218,7 +217,7 @@ public class AdditionalExerciseAdapter extends BaseAdapter {
                         mHandler.onDelete(position);
                         return true;
                     case R.id.complete:
-                        exercise.setProgress(0, exercise.getExerciseSet(0).getGoal());
+                        exercise.setProgress(0, exercise.getExerciseSet(0).getSetGoal());
                         notifyDataSetChanged();
                         return true;
                 }
